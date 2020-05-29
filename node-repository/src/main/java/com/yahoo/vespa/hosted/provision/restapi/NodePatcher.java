@@ -202,7 +202,15 @@ public class NodePatcher {
             if ((hasHardFailReports && node.state() == Node.State.failed) || node.state() == Node.State.parked)
                 return patchedNode;
 
-            patchedNode = patchedNode.with(patchedNode.status().withWantToDeprovision(hasHardFailReports));
+            if (hasHardFailReports) {
+                patchedNode = patchedNode.with(patchedNode.status()
+                                                          .withWantToRetire(hasHardFailReports)
+                                                          .withWantToDeprovision(hasHardFailReports));
+            } else {
+                patchedNode = patchedNode.with(patchedNode.status()
+                                                          .withWantToDeprovision(hasHardFailReports)
+                                                          .withWantToRetire(hasHardFailReports));
+            }
         }
 
         return patchedNode;

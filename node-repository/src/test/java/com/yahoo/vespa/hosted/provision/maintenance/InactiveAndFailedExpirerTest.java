@@ -204,7 +204,7 @@ public class InactiveAndFailedExpirerTest {
 
         // Nodes marked for deprovisioning are moved to parked
         tester.nodeRepository().write(inactiveNodes.stream()
-                                                   .map(node -> node.with(node.status().withWantToDeprovision(true)))
+                                                   .map(node -> node.with(node.status().withWantToRetire(true).withWantToDeprovision(true)))
                                                    .collect(Collectors.toList()), () -> {});
         tester.advanceTime(Duration.ofMinutes(11));
         new InactiveExpirer(tester.nodeRepository(), tester.clock(), Duration.ofMinutes(10)).run();

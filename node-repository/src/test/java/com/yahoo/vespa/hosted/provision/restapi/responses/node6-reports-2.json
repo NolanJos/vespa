@@ -29,7 +29,7 @@
   "rebootGeneration": 1,
   "currentRebootGeneration": 0,
   "failCount": 0,
-  "wantToRetire": false,
+  "wantToRetire": true,
   "wantToDeprovision": true,
   "history": [
     {

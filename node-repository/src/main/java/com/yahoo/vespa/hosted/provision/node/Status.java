@@ -36,6 +36,11 @@ public class Status {
         this.vespaVersion = Objects.requireNonNull(vespaVersion, "Vespa version must be non-null").filter(v -> !Version.emptyVersion.equals(v));
         this.dockerImage = Objects.requireNonNull(dockerImage, "Docker image must be non-null").filter(d -> !DockerImage.EMPTY.equals(d));
         this.failCount = failCount;
+        if (wantToDeprovision && !wantToRetire) {
+            // TODO(mpolden): Throw when persisted nodes have been rewritten
+            wantToRetire = true;
+            //throw new IllegalArgumentException("Node cannot be marked wantToDeprovision unless it's also marked wantToRetire");
+        }
         this.wantToRetire = wantToRetire;
         this.wantToDeprovision = wantToDeprovision;
         this.osVersion = Objects.requireNonNull(osVersion, "OS version must be non-null");
@@ -82,7 +87,10 @@ public class Status {
         return wantToRetire;
     }
 
-    /** Returns a copy of this with the want to de-provision flag changed */
+    /**
+     * Returns whether this node should be deprovisioned at some point in the future. It does NOT indicate whether the
+     * node is actually deprovisioned. This can only be set to true if {@link #wantToRetire()} is also true.
+     */
     public Status withWantToDeprovision(boolean wantToDeprovision) {
         return new Status(reboot, vespaVersion, dockerImage, failCount, wantToRetire, wantToDeprovision, osVersion, firmwareVerifiedAt);
     }
